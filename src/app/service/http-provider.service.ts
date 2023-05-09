@@ -1,39 +1,47 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { WebApiService } from './web-api.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { apiUrls } from '../utils/api-urls';
 
-//var apiUrl = "https://localhost:44370/";
-
-var apiUrl = "http://192.168.10.10:105";
-
-var httpLink = {
-  getAllPost: apiUrl + "/api/post/getAllPost",
-  deletePostById: apiUrl + "/api/post/deletePostById",
-  getPostDetailById: apiUrl + "/api/post/getPostDetailById",
-  savePost: apiUrl + "/api/post/savePost"
-}
 
 @Injectable({
   providedIn: 'root'
 })
 export class HttpProviderService {
 
-  constructor(private webApiService: WebApiService) { }
+  constructor(private httpClient: HttpClient) { }
 
   public getAllPost(): Observable<any> {
-    return this.webApiService.get(httpLink.getAllPost);
+    return this.httpClient.get(apiUrls.getAllPost);
   }
 
   public deletePostById(model: any): Observable<any> {
-    return this.webApiService.post(httpLink.deletePostById + '?postId=' + model, "");
+    const url = `${apiUrls.deletePostById}/${model.postId}`;
+  
+    // Set the request headers
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    
+    // Create the request options
+    const options = {
+      headers: headers,
+      body: {
+        userId: model.userId
+      }
+    };
+  
+    return this.httpClient.delete(url , options);;
   }
 
   public getPostDetailById(model: any): Observable<any> {
-    return this.webApiService.get(httpLink.getPostDetailById + '?postId=' + model);
+    return this.httpClient.get(apiUrls.getPostDetailById + '/' + model);
   }
 
   public savePost(model: any): Observable<any> {
-    return this.webApiService.post(httpLink.savePost, model);
+    return this.httpClient.post(apiUrls.savePost, model);
   }
-  
+
+  public updatePost(model: any): Observable<any> {
+    
+    return this.httpClient.put(apiUrls.updatePost +'/' + model.postId, model);
+  }
 }

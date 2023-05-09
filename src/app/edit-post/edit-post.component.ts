@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { HttpProviderService } from '../service/http-provider.service';
 import { postForm } from '../models/post.model';
+import { AuthenticationService } from '../service';
 
 @Component({
   selector: 'app-edit-post',
@@ -19,7 +20,7 @@ export class EditPostComponent implements OnInit {
   isSubmitted: boolean = false;
   postId: any;
 
-  constructor(private toastr: ToastrService, private route: ActivatedRoute, private router: Router,
+  constructor(private toastr: ToastrService, private route: ActivatedRoute,private auth:AuthenticationService, private router: Router,
     private httpProvider: HttpProviderService) { }
 
   ngOnInit(): void {
@@ -30,7 +31,7 @@ export class EditPostComponent implements OnInit {
   getPostDetailById() {
     this.httpProvider.getPostDetailById(this.postId).subscribe((data: any) => {
       if (data != null ) {
-        var resultData = data.body;
+        var resultData = data;
         if (resultData) {
           this.editPostForm.postId = resultData.postId;
           this.editPostForm.message = resultData.message;
@@ -45,16 +46,17 @@ export class EditPostComponent implements OnInit {
   EditPost(isValid: any) {
     this.isSubmitted = true;
     if (isValid) {
-      this.httpProvider.savePost(this.editPostForm).subscribe(async data => {
+
+    this.toastr.success('Success');
+
+      this.httpProvider.updatePost(this.editPostForm).subscribe(async data => {
         if (data != null ) {
-          var resultData = data.body;
-          if (resultData != null && resultData.isSuccess) {
-            if (resultData != null && resultData.isSuccess) {
-              this.toastr.success(resultData.message);
+          var resultData = data;
+          if (resultData != null ) {
+              this.toastr.success('Success');
               setTimeout(() => {
                 this.router.navigate(['/Home']);
               }, 500);
-            }
           }
         }
       },

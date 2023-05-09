@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { HttpProviderService } from '../service/http-provider.service';
 import { postForm } from '../models/post.model';
+import { AuthenticationService } from '../service';
 
 @Component({
   selector: 'app-add-post',
@@ -18,7 +19,9 @@ export class AddPostComponent implements OnInit {
 
   isSubmitted: boolean = false;
 
-  constructor(private router: Router, private httpProvider: HttpProviderService, private toastr: ToastrService) { }
+  constructor(private router: Router,
+    private auth:AuthenticationService,
+    private httpProvider: HttpProviderService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
   }
@@ -26,12 +29,14 @@ export class AddPostComponent implements OnInit {
   AddPost(isValid: any) {
     this.isSubmitted = true;
     if (isValid) {
+      this.addPostForm.userId.userId=this.auth.currentUserValue?.userId!;
+
       this.httpProvider.savePost(this.addPostForm).subscribe(async data => {
         if (data != null ) {
           if (data != null ) {
-            var resultData = data.body;
-            if (resultData != null && resultData.isSuccess) {
-              this.toastr.success(resultData.message);
+            var resultData = data;
+            if (resultData != null) {
+              this.toastr.success('Success');
               setTimeout(() => {
                 this.router.navigate(['/Home']);
               }, 500);

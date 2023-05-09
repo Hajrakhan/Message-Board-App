@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { User } from '../models/user';
+import { apiUrls } from '../utils/api-urls';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -23,14 +24,14 @@ export class AuthenticationService {
       
 
     register(user: User) {
-        return this.http.post(`/users/register`, user);
+        return this.http.post(apiUrls.register, user);
     }
 
     login(username: string, password: string) {
-        return this.http.post<any>(`/users/authenticate`, { username, password })
+        return this.http.post<any>(apiUrls.login, { username, password })
             .pipe(map(user => {
                 // login successful if there's a jwt token in the response
-                if (user && user.token) {
+                if (user) {
                     // store user details and jwt token in local storage to keep user logged in between page refreshes
                     localStorage.setItem('currentUser', JSON.stringify(user));
                     this.currentUserSubject!.next(user);

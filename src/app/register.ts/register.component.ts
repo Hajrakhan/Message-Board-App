@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 import * as tslib from 'tslib';
 
-import { AlertService, UserService, AuthenticationService } from '../service';
+import { AlertService, AuthenticationService } from '../service';
 
 @Component(
     {
@@ -51,7 +51,7 @@ export class RegisterComponent implements OnInit {
         }
 
         this.loading = true;
-        this.userService.register(this.registerForm.value)
+        this.authenticationService.register(this.registerForm.value)
             .pipe(first())
             .subscribe(
                 data => {

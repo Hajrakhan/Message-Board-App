@@ -55,36 +55,8 @@ export class HomeComponent implements OnInit,OnDestroy {
 
   ngOnInit(): void {
     
-    this.postList=[
-      {
-        "id": 1,
-        "message" :"Hello there",
-        "timeStamp": "10-01",
-        "userId" : {
-          "userId" : 1,
-          "userName" : "Hajra Khan"
-        }
-      },
-      {
-        "id": 2,
-        "message" :"Hello there",
-        "timeStamp": "10-01",
-        "userId" : {
-          "userId" : 3,
-          "userName" : "Hajra Khan"
-        }
-      },
-      {
-        "id": 3,
-        "message" :"Hello there",
-        "timeStamp": "10-01",
-        "userId" : {
-          "userId" : 4,
-          "userName" : "Hajra Khan"
-        }
-      }
-    ]
-    // this.getAllPosts();
+   
+    this.getAllPosts();
 
   }
   ngOnDestroy() {
@@ -95,7 +67,7 @@ export class HomeComponent implements OnInit,OnDestroy {
   async getAllPosts() {
     this.httpProvider.getAllPost().subscribe((data : any) => {
       if (data != null ) {
-        var resultData = data.body;
+        var resultData = data;
         if (resultData) {
           this.postList = resultData;
         }
@@ -127,11 +99,11 @@ export class HomeComponent implements OnInit,OnDestroy {
   }
 
   deletePost(post: any) {
-    this.httpProvider.deletePostById(post.id).subscribe((data : any) => {
+    this.httpProvider.deletePostById(post).subscribe((data : any) => {
       if (data != null ) {
-        var resultData = data.body;
-        if (resultData != null && resultData.isSuccess) {
-          this.toastr.success(resultData.message);
+        var resultData = data;
+        if (resultData != null ) {
+          this.toastr.success('Deleted');
           this.getAllPosts();
         }
       }

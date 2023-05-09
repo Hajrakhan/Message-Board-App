@@ -27,7 +27,7 @@
             <td>{{ post.timeStamp }}</td>
             <td>{{ post.username }}</td>
             <td>
-              <a href="#" [routerLink]="['/EditPost/', post.id]" class="btn"><i class="fa fa-edit edit"></i></a>
+              <a href="#" [routerLink]="['/EditPost/', post.postId]" class="btn"><i class="fa fa-edit edit"></i></a>
               <button type="button" (click)="deletePostConfirmation(post)" class="btn"><i class='fas fa-trash-alt delete'></i></button>
             </td>
           </tr>

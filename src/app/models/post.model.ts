@@ -1,8 +1,10 @@
+import { User } from "./user";
+
 export class postForm {
     postId: number = 0;
     message: string = "";
     timeStamp: string="";
-    userId: userForm=new userForm();
+    userId: User=new User();
   }
 
   export class userForm{
