@@ -1,27 +1,28 @@
-# MessageBoardApplication
-
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.0.0.
-
-## Development server
-
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Message Board Application
+This is a web application that allows users to post messages on a message board. The application includes a register/login module and features that allow users to create, read, update, and delete their own posts. 
+The application is implemented using Angular for the frontend and Spring Boot with H2 database for the backend.
+## Installation
+To install and run this application on your local machine, follow the steps below:
+1. Clone the repository from GitHub:
+git clone -b message-board-frontend https://github.com/Hajrakhan/Message-Board-App.git
+2. Change into the project directory:
+cd message-board-app
+3. Install the necessary dependencies for the frontend:
+npm install --force
+4. Start the frontend:
+ng serve --open
+5. for backend Clone the repository from GitHub:
+git clone -b message-board-backend https://github.com/Hajrakhan/Message-Board-App.git2
+2. Import the project in STS as maven existing project
+3. Run the project as spring boot project.
+4. The frontend will be accessible at the backend will be accessible at `http://localhost:9090`.
+The frontend will be accessible at `http://localhost:4200` and the backend will be accessible at `http://localhost:9090`.
+## Usage
+### Register/Login Module
+The register and login modules can be accessed by clicking on the "Register" and "Login" buttons respectively on the homepage.
+### Post Creation
+To create a post, click on the "New Post" button on the homepage. Enter your message in the input field and click on the "Post" button to submit the message.
+### Post Editing/Deletion
+Users can edit or delete their own posts by clicking on the "Edit" or "Delete" buttons respectively next to their post on the homepage.
+### Viewing All Posts
+All posts can be viewed on the homepage.
