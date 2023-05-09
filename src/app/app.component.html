@@ -1,0 +1,51 @@
+<style>
+  .toolbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    background-color: #64437d;
+    color: white;
+    font-weight: 600;
+  }
+
+  .toolbar i {
+    padding-left: 30px;
+    cursor: pointer;
+  }
+
+  .toolbar .logout {
+    float: right;
+    padding-right: 18px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: large;
+  }
+</style>
+
+<nav class="navbar fixed-top navbar-expand-md navbar-light white double-nav scrolling-navbar" *ngIf="currentUser">
+    <div class="toolbar" role="banner">
+    <div class="col-sm-6">
+      <h4 ><i class='fas fa-home' (click)="HomeClick()"></i> Message Board</h4>
+    </div>
+    <div class="col-sm-6">
+      <span class="logout" (click)="logout()"><b><i class="fas fa-sign-out-alt"></i> Logout</b></span>
+      <!-- <a class="nav-item nav-link" >Logout</a> -->
+    </div>
+  </div>
+</nav>
+<router-outlet></router-outlet>
+
+
+<!-- nav
+<nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="currentUser">
+  <div class="navbar-nav">
+      <a class="nav-item nav-link" routerLink="/">Home</a>
+      <a class="nav-item nav-link" (click)="logout()">Logout</a>
+  </div>
+</nav> -->
+
+
+
