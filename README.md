@@ -8,7 +8,9 @@ This is a message board application that allows users to post messages and view 
 ## Installation
 To install and run this application on your local machine, follow the steps below:
 1. Clone the repository from GitHub:
-git clone -b message-board-backend https://github.com/Hajrakhan/Message-Board-App.git2
+
+           git clone -b message-board-backend https://github.com/Hajrakhan/Message-Board-App.git2
+
 2. Import the project in STS as maven existing project
 3. Run the project as spring boot project.
 4. The frontend will be accessible at the backend will be accessible at `http://localhost:9090`.
