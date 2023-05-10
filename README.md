@@ -1,4 +1,4 @@
-## Message Board Application
+# Message Board Application
 This is a web application that allows users to post messages on a message board. The application includes a register/login module and features that allow users to create, read, update, and delete their own posts. 
 The application is implemented using Angular for the frontend and Spring Boot with H2 database for the backend.
 ## Installation
