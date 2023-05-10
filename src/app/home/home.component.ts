@@ -6,6 +6,8 @@ import { HttpProviderService } from '../service/http-provider.service';
 import { User } from '../models/user';
 import { Subscription } from 'rxjs';
 import { AuthenticationService } from '../service';
+import { WebSocketAPI } from '../service/web-service';
+import { AppComponent } from '../app.component';
 
 @Component({
   selector: 'ng-modal-confirm',
@@ -40,24 +42,21 @@ const MODALS: { [name: string]: Type<any> } = {
 })
 export class HomeComponent implements OnInit,OnDestroy {
   closeResult = '';
-  postList: any = [];
   currentUser: User=new User();
   currentUserSubscription: Subscription;
+  greeting: any;
+  name?: string;
   constructor(private router: Router, private modalService: NgbModal,
-    private authenticationService: AuthenticationService,
-    private toastr: ToastrService, private httpProvider : HttpProviderService) { 
-
-      this.currentUserSubscription = this.authenticationService.currentUser.subscribe(x => this.currentUser = x ?? {} as User);
-
-
-    }
+  private authenticationService: AuthenticationService,
+  public appComponent:AppComponent,
+  private toastr: ToastrService, private httpProvider : HttpProviderService,
+  ) { 
+  this.currentUserSubscription = this.authenticationService.currentUser.subscribe(x => this.currentUser = x ?? {} as User);
+  }
     
 
   ngOnInit(): void {
-    
-   
     this.getAllPosts();
-
   }
   ngOnDestroy() {
     // unsubscribe to ensure no memory leaks
@@ -69,7 +68,7 @@ export class HomeComponent implements OnInit,OnDestroy {
       if (data != null ) {
         var resultData = data;
         if (resultData) {
-          this.postList = resultData;
+          this.appComponent.postList = resultData;
         }
       }
     },
@@ -110,4 +109,11 @@ export class HomeComponent implements OnInit,OnDestroy {
     },
     (error : any) => {});
   }
+// Add this function to your component
+isCurrentUserPost(userId: number): boolean {
+  const currentUser = this.authenticationService.currentUserValue;
+  return this.authenticationService.currentUserValue?.userId! === userId;
+}
+
+
 }
