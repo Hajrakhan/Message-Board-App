@@ -22,17 +22,17 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let post of postList" class="center-align">
+          <tr *ngFor="let post of appComponent.postList" class="center-align">
             <td>{{ post.message }}</td>
             <td>{{ post.timeStamp }}</td>
             <td>{{ post.username }}</td>
             <td>
-              <a href="#" [routerLink]="['/EditPost/', post.postId]" class="btn"><i class="fa fa-edit edit"></i></a>
-              <button type="button" (click)="deletePostConfirmation(post)" class="btn"><i class='fas fa-trash-alt delete'></i></button>
+              <a *ngIf="isCurrentUserPost(post.userId.userId)" href="#" [routerLink]="['/EditPost/', post.postId]" class="btn"><i class="fa fa-edit edit"></i></a>
+              <button *ngIf="isCurrentUserPost(post.userId.userId)" type="button" (click)="deletePostConfirmation(post)" class="btn"><i class='fas fa-trash-alt delete'></i></button>
             </td>
           </tr>
           <tr>
-            <td *ngIf="postList.length == 0" colspan="6">No Posts Found</td>
+            <td *ngIf="appComponent.postList.length == 0" colspan="6">No Posts Found</td>
           </tr>
         </tbody>
       </table>
