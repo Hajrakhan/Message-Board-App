@@ -1,54 +1,70 @@
-import * as Stomp from 'stompjs';
-import * as SockJS from 'sockjs-client';
-import { AppComponent } from '../app.component';
+import { Injectable } from '@angular/core';
+import { Observable, throwError } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { catchError } from 'rxjs/internal/operators/catchError';
+import { HttpHeaders, HttpClient } from '@angular/common/http';
 
-export class WebSocketAPI {
-    webSocketEndPoint: string = 'http://localhost:9090/ws';
-    topic: string = "/topic/greetings";
-    stompClient: any;
-    appComponent: AppComponent;
-    constructor(appComponent: AppComponent){
-        this.appComponent = appComponent;
-    }
-    connect() {
-        console.log("Initialize WebSocket Connection");
-        let ws = new SockJS(this.webSocketEndPoint);
-        this.stompClient = Stomp.over(ws);
-        const _this = this;
-        _this.stompClient.connect({}, function (frame :any) {
-            _this.stompClient.subscribe(_this.topic, function (sdkEvent :any) {
-                _this.onMessageReceived(sdkEvent);
-            });
-            //_this.stompClient.reconnect_delay = 2000;
-        }, this.errorCallBack);
+@Injectable({
+  providedIn: 'root'
+})
+export class WebApiService {
+
+
+  constructor(private httpClient: HttpClient) {
+  }
+
+  // Get call method
+  // Param 1 : authToken
+  // Param 2 : url
+  get(url: string): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+        'Cache-Control' : 'no-cache',
+        'Pragma' : 'no-cache'
+      }),
+      observe: "response" as 'body'
     };
 
-    disconnect() {
-        if (this.stompClient !== null) {
-            this.stompClient.disconnect();
-        }
-        console.log("Disconnected");
-    }
+    return this.httpClient.get(
+      url,
+      httpOptions
+    )
+      .pipe(
+        map((response: any) => this.ReturnResponseData(response)),
+        catchError(this.handleError)
+      );
+  }
 
-    // on error, schedule a reconnection attempt
-    errorCallBack(error: any) {
-        console.log("errorCallBack -> " + error)
-        setTimeout(() => {
-            this.connect();
-        }, 5000);
-    }
+  // Post call method
+  // Param 1 : authToken
+  // Param 2 : url
+  // Param 3 : model
+  post(url: string, model: any): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      }),
+      observe: "response" as 'body'
+    };
 
- /**
-  * Send message to sever via web socket
-  * @param {*} message 
-  */
-    send(model : any) {
-        console.log("calling logout api via web socket");
-        this.stompClient.send("/app//hello",{}, JSON.stringify(model));
-    }
+    return this.httpClient.post(
+      url,
+      model,
+      httpOptions)
+      .pipe(
+        map((response: any) => this.ReturnResponseData(response)),
+        catchError(this.handleError)
+      );
+  }
 
-    onMessageReceived(model :any) {
 
-        this.appComponent.handleMessage(JSON.stringify(model));
-    }
+  private ReturnResponseData(response: any) {
+    return response;
+  }
+
+  private handleError(error: any) {
+    return throwError(error);
+  }
+
 }

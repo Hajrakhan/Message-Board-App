@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { HttpProviderService } from '../service/http-provider.service';
 import { postForm } from '../models/post.model';
 import { AuthenticationService } from '../service';
+import { AppComponent } from '../app.component';
 
 @Component({
   selector: 'app-add-post',
@@ -21,7 +22,9 @@ export class AddPostComponent implements OnInit {
 
   constructor(private router: Router,
     private auth:AuthenticationService,
-    private httpProvider: HttpProviderService, private toastr: ToastrService) { }
+    private httpProvider: HttpProviderService, private toastr: ToastrService,
+    private appComponent:AppComponent
+    ) { }
 
   ngOnInit(): void {
   }
@@ -30,26 +33,11 @@ export class AddPostComponent implements OnInit {
     this.isSubmitted = true;
     if (isValid) {
       this.addPostForm.userId.userId=this.auth.currentUserValue?.userId!;
+      this.appComponent.savePost(this.addPostForm)
+      this.toastr.success('Success');
 
-      this.httpProvider.savePost(this.addPostForm).subscribe(async data => {
-        if (data != null ) {
-          if (data != null ) {
-            var resultData = data;
-            if (resultData != null) {
-              this.toastr.success('Success');
-              setTimeout(() => {
-                this.router.navigate(['/Home']);
-              }, 500);
-            }
-          }
-        }
-      },
-        async error => {
-          this.toastr.error(error.message);
-          setTimeout(() => {
-            this.router.navigate(['/Home']);
-          }, 500);
-        });
+      this.router.navigate(['/Home']);
+
     }
   }
 

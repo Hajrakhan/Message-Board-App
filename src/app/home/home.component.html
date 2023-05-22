@@ -27,8 +27,8 @@
             <td>{{ post.timeStamp }}</td>
             <td>{{ post.username }}</td>
             <td>
-              <a *ngIf="isCurrentUserPost(post.userId.userId)" href="#" [routerLink]="['/EditPost/', post.postId]" class="btn"><i class="fa fa-edit edit"></i></a>
-              <button *ngIf="isCurrentUserPost(post.userId.userId)" type="button" (click)="deletePostConfirmation(post)" class="btn"><i class='fas fa-trash-alt delete'></i></button>
+              <a href="#" [routerLink]="['/EditPost/', post.postId]" class="btn"><i class="fa fa-edit edit"></i></a>
+              <button type="button" (click)="deletePostConfirmation(post)" class="btn"><i class='fas fa-trash-alt delete'></i></button>
             </td>
           </tr>
           <tr>

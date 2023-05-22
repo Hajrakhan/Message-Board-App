@@ -109,11 +109,6 @@ export class HomeComponent implements OnInit,OnDestroy {
     },
     (error : any) => {});
   }
-// Add this function to your component
-isCurrentUserPost(userId: number): boolean {
-  const currentUser = this.authenticationService.currentUserValue;
-  return this.authenticationService.currentUserValue?.userId! === userId;
-}
 
 
 }

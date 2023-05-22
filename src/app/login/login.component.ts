@@ -5,6 +5,7 @@ import { first } from 'rxjs/operators';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { AlertService, AuthenticationService } from '../service';
+import { AppComponent } from '../app.component';
 
 @Component(
 {templateUrl: 'login.component.html',
@@ -22,7 +23,8 @@ export class LoginComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private authenticationService: AuthenticationService,
-        private alertService: AlertService
+        private alertService: AlertService,
+        private appcomponent:AppComponent
     ) {
         // redirect to home if already logged in
         if (this.authenticationService.currentUserValue) { 
@@ -56,6 +58,7 @@ export class LoginComponent implements OnInit {
             .pipe(first())
             .subscribe(
                 data => {
+                    this.appcomponent.connect();
                     this.router.navigate([this.returnUrl]);
                 },
                 error => {

@@ -26,9 +26,11 @@ import { fakeBackendProvider } from './helpers/fake.backend';
     EditPostComponent,
     LoginComponent,
     RegisterComponent,
-    AlertComponent
+    AlertComponent,
+    
   ],
   imports: [
+    FormsModule,
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
