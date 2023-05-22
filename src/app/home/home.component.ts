@@ -6,7 +6,7 @@ import { HttpProviderService } from '../service/http-provider.service';
 import { User } from '../models/user';
 import { Subscription } from 'rxjs';
 import { AuthenticationService } from '../service';
-import { WebSocketAPI } from '../service/web-service';
+import { WebSocketAPI } from '../service/web-socket';
 import { AppComponent } from '../app.component';
 
 @Component({

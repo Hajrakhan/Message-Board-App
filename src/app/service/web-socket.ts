@@ -4,7 +4,7 @@ import { AppComponent } from '../app.component';
 
 export class WebSocketAPI {
     webSocketEndPoint: string = 'http://localhost:9090/ws';
-    topic: string = "/topic/greetings";
+    topic: string = "/topic/postAdded";
     stompClient: any;
     appComponent: AppComponent;
     constructor(appComponent: AppComponent){
@@ -44,7 +44,7 @@ export class WebSocketAPI {
   */
     send(model : any) {
         console.log("calling logout api via web socket");
-        this.stompClient.send("/app//hello",{}, JSON.stringify(model));
+        this.stompClient.send("/app//addPost",{}, JSON.stringify(model));
     }
 
     onMessageReceived(model :any) {

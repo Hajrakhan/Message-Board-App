@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { User } from './models/user';
 import { AuthenticationService } from './service';
 import { AbstractControl } from '@angular/forms';
-import { WebSocketAPI } from './service/web-service';
+import { WebSocketAPI } from './service/web-socket';
 
 @Component({
   selector: 'app-root',
