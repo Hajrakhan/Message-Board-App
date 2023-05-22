@@ -30,8 +30,8 @@ public class PostController {
         this.authRepository=authRepository;        
     }
      
-     @MessageMapping("/hello")
-     @SendTo("/topic/greetings")
+     @MessageMapping("/addPost")
+     @SendTo("/topic/postAdded")
      public PostModel greeting(@RequestBody PostModel post) throws Exception {
     	AuthModel user = authRepository.findById(post.getUserId().getUserId()).orElse(null);
         post.setUserId(user);
