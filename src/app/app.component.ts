@@ -17,6 +17,9 @@ export class AppComponent {
 
   postList: any = [];
 
+  connect() {
+    this.webSocketAPI!.connect();
+  }
   constructor(
     private router: Router,
     private authenticationService: AuthenticationService,
@@ -28,10 +31,6 @@ export class AppComponent {
   }
 
   ngOnInit() {}
-
-  connect() {
-    this.webSocketAPI!.connect();
-  }
 
   disconnect() {
     this.webSocketAPI!.disconnect();

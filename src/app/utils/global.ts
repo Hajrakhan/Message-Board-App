@@ -1,3 +1,3 @@
 export const globalVariables = {
-  postList: [] as any[]
+  postList: [] as any[],
 };

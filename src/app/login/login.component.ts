@@ -6,8 +6,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { AlertService, AuthenticationService } from '../service';
 import { AppComponent } from '../app.component';
+import { globalVariables } from '../utils/global';
 import { HttpProviderService } from '../service/http-provider.service';
-import { WebSocketAPI } from '../service/web-socket';
 
 @Component({
   templateUrl: 'login.component.html',
@@ -26,8 +26,7 @@ export class LoginComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private alertService: AlertService,
     private appcomponent: AppComponent,
-    private http: HttpProviderService,
-    private webSocketAPI: WebSocketAPI
+    private http: HttpProviderService
   ) {
     // redirect to home if already logged in
     if (this.authenticationService.currentUserValue) {
@@ -68,7 +67,7 @@ export class LoginComponent implements OnInit {
           this.http.getAllPost().subscribe(
             (postList: any[]) => {
               if (postList && postList.length > 0) {
-                this.webSocketAPI.postListUpdated.next(postList);
+                globalVariables.postList = postList;
               }
               this.router.navigate([this.returnUrl]);
             },

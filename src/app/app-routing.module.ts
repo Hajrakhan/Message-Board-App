@@ -8,21 +8,19 @@ import { LoginComponent } from './login';
 import { RegisterComponent } from './register.ts';
 
 const routes: Routes = [
-  // { path: '', redirectTo: 'Home', pathMatch: 'full'},
   { path: 'Home', component: HomeComponent },
   { path: 'AddPost', component: AddPostComponent },
-  { path: 'EditPost/:postId', component: EditPostComponent } ,
+  { path: 'EditPost/:postId', component: EditPostComponent },
   { path: '', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
 
   // otherwise redirect to home
-  { path: '**', redirectTo: '' }
+  { path: '**', redirectTo: '' },
 ];
-  
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
