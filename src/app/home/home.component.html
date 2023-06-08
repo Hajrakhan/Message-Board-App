@@ -17,22 +17,24 @@
         <thead>
           <tr class="center-align">
             <th>Message</th>
-            <th>Username</th>
+            <th>Name</th>
             <th>TimeStamp</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let post of appComponent.postList" class="center-align">
-            <td>{{ post.message }}</td>
-            <td>{{ post.timeStamp }}</td>
-            <td>{{ post.username }}</td>
+          <tr *ngFor="let post of postList" class="center-align">
+            <td>{{ post.message}}</td>
+            <td>{{ post.userId.firstName  }} {{ post.userId.lastName  }}</td>
+            <td>{{ post.timeStamp | date:'medium' }}</td>
+
+
             <td>
-              <a href="#" [routerLink]="['/EditPost/', post.postId]" class="btn"><i class="fa fa-edit edit"></i></a>
-              <button type="button" (click)="deletePostConfirmation(post)" class="btn"><i class='fas fa-trash-alt delete'></i></button>
+              <a *ngIf="post.userId.userId === currentUser.userId" href="#" [routerLink]="['/EditPost/', post.postId]" class="btn"><i class="fa fa-edit edit"></i></a>
+              <button *ngIf="post.userId.userId === currentUser.userId"  type="button" (click)="deletePostConfirmation(post)" class="btn"><i class='fas fa-trash-alt delete'></i></button>
             </td>
           </tr>
           <tr>
-            <td *ngIf="appComponent.postList.length == 0" colspan="6">No Posts Found</td>
+            <td *ngIf="postList.length == 0" colspan="6">No Posts Found</td>
           </tr>
         </tbody>
       </table>

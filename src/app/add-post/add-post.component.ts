@@ -6,6 +6,8 @@ import { HttpProviderService } from '../service/http-provider.service';
 import { postForm } from '../models/post.model';
 import { AuthenticationService } from '../service';
 import { AppComponent } from '../app.component';
+import { HomeComponent } from '../home/home.component';
+import { WebSocketAPI } from '../service/web-socket';
 
 @Component({
   selector: 'app-add-post',
@@ -22,18 +24,19 @@ export class AddPostComponent implements OnInit {
 
   constructor(private router: Router,
     private auth:AuthenticationService,
-    private httpProvider: HttpProviderService, private toastr: ToastrService,
-    private appComponent:AppComponent
+    private toastr: ToastrService,
+    private webSocketAPI: WebSocketAPI
     ) { }
 
   ngOnInit(): void {
+
   }
 
   AddPost(isValid: any) {
     this.isSubmitted = true;
     if (isValid) {
       this.addPostForm.userId.userId=this.auth.currentUserValue?.userId!;
-      this.appComponent.savePost(this.addPostForm)
+      this.webSocketAPI?.addPost(this.addPostForm)
       this.toastr.success('Success');
 
       this.router.navigate(['/Home']);

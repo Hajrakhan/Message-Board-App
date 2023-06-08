@@ -6,6 +6,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { AlertService, AuthenticationService } from '../service';
 import { AppComponent } from '../app.component';
+import { globalVariables } from '../utils/global';
+import { HttpProviderService } from '../service/http-provider.service';
 
 @Component(
 {templateUrl: 'login.component.html',
@@ -24,7 +26,8 @@ export class LoginComponent implements OnInit {
         private router: Router,
         private authenticationService: AuthenticationService,
         private alertService: AlertService,
-        private appcomponent:AppComponent
+        private appcomponent:AppComponent,
+        private http:HttpProviderService
     ) {
         // redirect to home if already logged in
         if (this.authenticationService.currentUserValue) { 
@@ -47,23 +50,37 @@ export class LoginComponent implements OnInit {
 
     onSubmit() {
         this.submitted = true;
-
+      
         // stop here if form is invalid
         if (this.loginForm!.invalid) {
-            return;
+          return;
         }
-
+      
         this.loading = true;
         this.authenticationService.login(this.f['username'].value, this.f['password'].value)
-            .pipe(first())
-            .subscribe(
-                data => {
-                    this.appcomponent.connect();
-                    this.router.navigate([this.returnUrl]);
+          .pipe(first())
+          .subscribe(
+            data => {
+              this.appcomponent.connect();
+              this.http.getAllPost().subscribe(
+                (postList: any[]) => {
+                  if (postList && postList.length > 0) {
+                    globalVariables.postList = postList;
+                  }
+                  this.router.navigate([this.returnUrl]);
+
                 },
                 error => {
-                    this.alertService.error(error);
-                    this.loading = false;
-                });
-    }
+                  this.alertService.error(error);
+                  this.loading = false;
+                }
+              );
+            },
+            error => {
+              this.alertService.error(error);
+              this.loading = false;
+            }
+          );
+      }
+      
 }

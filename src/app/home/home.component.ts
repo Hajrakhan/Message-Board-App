@@ -6,8 +6,8 @@ import { HttpProviderService } from '../service/http-provider.service';
 import { User } from '../models/user';
 import { Subscription } from 'rxjs';
 import { AuthenticationService } from '../service';
+import { globalVariables } from '../utils/global';
 import { WebSocketAPI } from '../service/web-socket';
-import { AppComponent } from '../app.component';
 
 @Component({
   selector: 'ng-modal-confirm',
@@ -42,46 +42,31 @@ const MODALS: { [name: string]: Type<any> } = {
 })
 export class HomeComponent implements OnInit,OnDestroy {
   closeResult = '';
+  public postList: any[]=[];
   currentUser: User=new User();
   currentUserSubscription: Subscription;
-  greeting: any;
-  name?: string;
+  postListSubscription?: Subscription;
   constructor(private router: Router, private modalService: NgbModal,
   private authenticationService: AuthenticationService,
-  public appComponent:AppComponent,
   private toastr: ToastrService, private httpProvider : HttpProviderService,
+  private webSocketAPI: WebSocketAPI
   ) { 
   this.currentUserSubscription = this.authenticationService.currentUser.subscribe(x => this.currentUser = x ?? {} as User);
   }
     
 
   ngOnInit(): void {
-    this.getAllPosts();
+    this.postList = globalVariables.postList;
+    this.postListSubscription = this.webSocketAPI.postListUpdated.subscribe(
+      (updatedPostList) => {
+        this.postList = updatedPostList;
+      }
+    );
   }
   ngOnDestroy() {
     // unsubscribe to ensure no memory leaks
     this.currentUserSubscription.unsubscribe();
 }
-
-  async getAllPosts() {
-    this.httpProvider.getAllPost().subscribe((data : any) => {
-      if (data != null ) {
-        var resultData = data;
-        if (resultData) {
-          this.appComponent.postList = resultData;
-        }
-      }
-    },
-    (error : any)=> {
-        if (error) {
-          if (error.status == 404) {
-            if(error.error && error.error.message){
-              // this.postList = [];
-            }
-          }
-        }
-      });
-  }
 
   AddPost() {
     this.router.navigate(['AddPost']);
@@ -98,16 +83,9 @@ export class HomeComponent implements OnInit,OnDestroy {
   }
 
   deletePost(post: any) {
-    this.httpProvider.deletePostById(post).subscribe((data : any) => {
-      if (data != null ) {
-        var resultData = data;
-        if (resultData != null ) {
-          this.toastr.success('Deleted');
-          this.getAllPosts();
-        }
-      }
-    },
-    (error : any) => {});
+   this.webSocketAPI.deletePost(post);
+   this.toastr.success('Deleted');
+
   }
 
 

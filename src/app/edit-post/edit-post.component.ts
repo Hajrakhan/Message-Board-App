@@ -5,6 +5,9 @@ import { ToastrService } from 'ngx-toastr';
 import { HttpProviderService } from '../service/http-provider.service';
 import { postForm } from '../models/post.model';
 import { AuthenticationService } from '../service';
+import { AppComponent } from '../app.component';
+import { HomeComponent } from '../home/home.component';
+import { WebSocketAPI } from '../service/web-socket';
 
 @Component({
   selector: 'app-edit-post',
@@ -21,7 +24,10 @@ export class EditPostComponent implements OnInit {
   postId: any;
 
   constructor(private toastr: ToastrService, private route: ActivatedRoute,private auth:AuthenticationService, private router: Router,
-    private httpProvider: HttpProviderService) { }
+    private httpProvider: HttpProviderService,
+    private webSocketAPI: WebSocketAPI
+    
+   ) { }
 
   ngOnInit(): void {
     this.postId = this.route.snapshot.params['postId'];
@@ -46,27 +52,14 @@ export class EditPostComponent implements OnInit {
   EditPost(isValid: any) {
     this.isSubmitted = true;
     if (isValid) {
+      this.editPostForm.userId.userId = this.auth.currentUserValue?.userId!;
 
-    this.toastr.success('Success');
+      // Call the StompService to send the edited post data
+  this.webSocketAPI!.updatePost(this.editPostForm);
+  this.toastr.success('Success');
 
-      this.httpProvider.updatePost(this.editPostForm).subscribe(async data => {
-        if (data != null ) {
-          var resultData = data;
-          if (resultData != null ) {
-              this.toastr.success('Success');
-              setTimeout(() => {
-                this.router.navigate(['/Home']);
-              }, 500);
-          }
-        }
-      },
-        async error => {
-          this.toastr.error(error.message);
-          setTimeout(() => {
-            this.router.navigate(['/Home']);
-          }, 500);
-        });
-    }
+  this.router.navigate(['/Home']);
   }
+}
 }
 

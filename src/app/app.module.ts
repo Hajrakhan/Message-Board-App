@@ -17,6 +17,7 @@ import { RegisterComponent } from './register.ts';
 import { AlertComponent } from './components';
 import { ErrorInterceptor, JwtInterceptor } from './helpers';
 import { fakeBackendProvider } from './helpers/fake.backend';
+import { WebSocketAPI } from './service/web-socket';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { fakeBackendProvider } from './helpers/fake.backend';
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    WebSocketAPI,
 
     // provider used to create fake backend
     fakeBackendProvider

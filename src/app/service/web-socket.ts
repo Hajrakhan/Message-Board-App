@@ -1,15 +1,17 @@
 import * as Stomp from 'stompjs';
 import * as SockJS from 'sockjs-client';
 import { AppComponent } from '../app.component';
+import { HomeComponent } from '../home/home.component';
+import { Inject, Injectable } from '@angular/core';
+import { globalVariables } from '../utils/global';
+import { Subject } from 'rxjs';
 
 export class WebSocketAPI {
     webSocketEndPoint: string = 'http://localhost:9090/ws';
-    topic: string = "/topic/postAdded";
+    topic: string = "/topic/postChanged";
     stompClient: any;
-    appComponent: AppComponent;
-    constructor(appComponent: AppComponent){
-        this.appComponent = appComponent;
-    }
+    postListUpdated: Subject<any[]> = new Subject<any[]>();
+     
     connect() {
         console.log("Initialize WebSocket Connection");
         let ws = new SockJS(this.webSocketEndPoint);
@@ -42,13 +44,26 @@ export class WebSocketAPI {
   * Send message to sever via web socket
   * @param {*} message 
   */
-    send(model : any) {
+    addPost(model : any) {
         console.log("calling logout api via web socket");
         this.stompClient.send("/app//addPost",{}, JSON.stringify(model));
     }
-
-    onMessageReceived(model :any) {
-
-        this.appComponent.handleMessage(JSON.stringify(model));
+    updatePost(model: any) {
+        console.log("calling updatePost API via WebSocket");
+        return this.stompClient.send(`/app//updatePost`, {}, JSON.stringify(model));
     }
+    
+    deletePost(model : any) {
+        console.log("calling logout api via web socket");
+        this.stompClient.send("/app//deletePost",{}, JSON.stringify(model));
+    }
+    onMessageReceived(model: any) {
+        const parsedMessage = JSON.parse(JSON.stringify(model));
+        const updatedPostList = JSON.parse(parsedMessage.body);
+        if (Array.isArray(updatedPostList)) {
+          this.postListUpdated.next(updatedPostList);
+        }
+      }
+      
+   
 }

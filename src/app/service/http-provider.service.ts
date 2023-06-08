@@ -40,8 +40,8 @@ export class HttpProviderService {
     return this.httpClient.post(apiUrls.savePost, model);
   }
 
-  public updatePost(model: any): Observable<any> {
+  // public updatePost(model: any): Observable<any> {
     
-    return this.httpClient.put(apiUrls.updatePost +'/' + model.postId, model);
-  }
+  //   return this.httpClient.put(apiUrls.updatePost +'/' + model.postId, model);
+  // }
 }
