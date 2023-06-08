@@ -28,7 +28,6 @@ import { WebSocketAPI } from './service/web-socket';
     LoginComponent,
     RegisterComponent,
     AlertComponent,
-    
   ],
   imports: [
     FormsModule,
@@ -41,14 +40,7 @@ import { WebSocketAPI } from './service/web-socket';
     BrowserAnimationsModule,
     ReactiveFormsModule,
   ],
-  providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    WebSocketAPI,
-
-    // provider used to create fake backend
-    fakeBackendProvider
-],
-  bootstrap: [AppComponent]
+  providers: [WebSocketAPI],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
