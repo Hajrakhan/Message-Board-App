@@ -44,12 +44,11 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthModel> login(@RequestBody AuthModel post) {
         try {
+     
             AuthModel user = authRepository.findByUsername(post.getUsername());
             
             // Check if the user exists and the password matches
             if (user != null && verifyPassword(post.getPassword(), user.getPassword())) {
-                // Return the user object in the response
-            	
                 return ResponseEntity.ok(user);
             } else {
                 // Invalid credentials

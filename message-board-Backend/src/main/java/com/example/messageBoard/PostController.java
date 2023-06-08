@@ -1,6 +1,10 @@
 package com.example.messageBoard;
 import org.springframework.web.bind.annotation.RestController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.web.util.HtmlUtils;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -23,24 +28,79 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:4200/")
 public class PostController {
 	
+	private static final Logger logger = LoggerFactory.getLogger(PostController.class);
+
 	 private final PostRepository postRepository;
 	 private final AuthRepository authRepository;
      public PostController(PostRepository postRepository,AuthRepository authRepository) {
         this.postRepository = postRepository;
         this.authRepository=authRepository;        
     }
-     
      @MessageMapping("/addPost")
-     @SendTo("/topic/postAdded")
-     public PostModel greeting(@RequestBody PostModel post) throws Exception {
+     @SendTo("/topic/postChanged")
+     public List<PostModel> addPostNew(@RequestBody PostModel post) throws Exception {
     	AuthModel user = authRepository.findById(post.getUserId().getUserId()).orElse(null);
         post.setUserId(user);
         post.setTimeStamp();   
         PostModel postObj = postRepository.save(post);
  	    Thread.sleep(1000); // simulated delay
- 	    return postObj;
+        List<PostModel> postList = new ArrayList<>();
+        postRepository.findAll().forEach(postList::add);
+
+        return postList;
      }
     
+     @MessageMapping("/updatePost")
+     @SendTo("/topic/postChanged")
+     public List<PostModel> updatePostSocket(@RequestBody PostModel updatedPost) throws Exception {
+         Optional<PostModel> postData = postRepository.findById(updatedPost.getPostId());
+         if (postData.isPresent()) {
+             PostModel existingPost = postData.get();
+             // Check if the client owns the post before allowing modification
+             if (existingPost.getUserId().getUserId().equals(updatedPost.getUserId().getUserId())) {
+                 existingPost.setMessage(updatedPost.getMessage());
+                 existingPost.setTimeStamp(); 
+                 PostModel updatedPostObj = postRepository.save(existingPost);
+                 List<PostModel> postList = new ArrayList<>();
+                 postRepository.findAll().forEach(postList::add);
+
+                 return postList;
+                 
+             } else {
+                 throw new UnauthorizedException("User is not authorized to update this post.");
+             }
+         } else {
+             throw new NotFoundException("Post not found.");
+         }
+     }
+     
+     @MessageMapping("/deletePost")
+     @SendTo("/topic/postChanged")
+     public List<PostModel> deletePostNew(@RequestBody PostModel post) throws Exception {
+    	 try {
+             Optional<PostModel> postData = postRepository.findById(post.getPostId());
+             if (postData.isPresent()) {
+                 PostModel existingPost = postData.get();
+                 // Check if the client owns the post before allowing deletion
+                 if (existingPost.getUserId().getUserId().equals(post.getUserId().getUserId())) {
+                     postRepository.deleteById(post.getPostId());
+                     List<PostModel> postList = new ArrayList<>();
+                     postRepository.findAll().forEach(postList::add);
+
+                     return postList;
+                 } else {
+                	 throw new UnauthorizedException("User is not authorized to update this post.");
+                 }
+             }
+             throw new NotFoundException("Post not found.");
+         } catch (Exception e) {
+        	 throw new NotFoundException("error.");
+         }
+     }
+     
+     
+     //simple apis
+     
      @MessageMapping("/add")
      @SendTo("/getAll")
      public  PostModel add(@RequestBody PostModel post) throws Exception {
@@ -135,5 +195,17 @@ public class PostController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    public class UnauthorizedException extends RuntimeException {
+        public UnauthorizedException(String message) {
+            super(message);
+        }
+    }
+
+    public class NotFoundException extends RuntimeException {
+        public NotFoundException(String message) {
+            super(message);
+        }
+    }
+
 }
 
